@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *	
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License
+-->
+	<ModulePrefs title="Hangout Starter">
+		<Require feature="rpc" />
+		<Require feature="views" />
+		<Require feature="locked-domain" />
+	</ModulePrefs>
+  <Content type="html"><![CDATA[
+    <html>
+<style type="text/css">
+<!--
+.button {
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+  background: -moz-linear-gradient(top, #fff, #ddd);  
+  border: 1px solid #bbb;
+}
+
+.button:active {
+	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333)); 
+	background: -moz-linear-gradient(bottom, #ddd, #aaa); }
+
+-->
+</style>
+<body>
+
+<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<h3>WebsiteOne connection service</h3>
+
+<p>
+<input class="button" type="button" value="Show current participants!" id="showParticipants" 
+    style="visibility:hidden;"
+    onClick="showParticipants()"/>
+<input class="button" type="button" value="Get HO url" id="showHoUrl" 
+    style="visibility:visible;"
+    onClick="showHoUrl()"/>
+</p>
+
+<div id="participantsDiv"></div>
+<div id="HangoutUrlDiv"></div>
+<hr>
+
+</body>
+<script>
+  function sendUrl(){
+  var startData = gapi.hangout.getStartData();
+  var callbackUrl = startData.replace('http','http');
+
+  var hangoutUrl = gapi.hangout.getHangoutUrl();
+  var youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
+  var participants = gapi.hangout.getParticipants();
+
+  $.ajax({
+    url: callbackUrl,
+    dataType: 'text',
+    type: 'PUT',
+    data: {
+      "hangout_url": hangoutUrl,
+      "YouTubeLiveId": youTubeLiveId,
+      "participants": participants
+    }
+  })
+}
+
+function init() {
+  // When API is ready...
+  gapi.hangout.onApiReady.add(
+    function(eventObj) {
+    if (eventObj.isApiReady) {
+      sendUrl();
+    }
+  });
+}
+
+// Wait for gadget to load.
+function registerInit(){ gadgets.util.registerOnLoadHandler(init) };
+
+registerInit();
+
+</script>
+
+]]>
+</Content>
+</Module>
