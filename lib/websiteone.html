@@ -1,18 +1,11 @@
 <html>
 <style type="text/css">
 <!--
-.button {
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
-  background: -moz-linear-gradient(top, #fff, #ddd);  
-  border: 1px solid #bbb;
+body {
+margin: 0px;
+padding: 0px;
+background-color: orange;
 }
-
-.button:active {
-	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333)); 
-	background: -moz-linear-gradient(bottom, #ddd, #aaa); }
-
 -->
 </style>
 <body>
@@ -21,19 +14,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <h3>WebsiteOne connection service</h3>
-
-<p>
-<input class="button" type="button" value="Show current participants!" id="showParticipants" 
-    style="visibility:hidden;"
-    onClick="showParticipants()"/>
-<input class="button" type="button" value="Get HO url" id="showHoUrl" 
-    style="visibility:visible;"
-    onClick="showHoUrl()"/>
-</p>
-
-<div id="participantsDiv"></div>
-<div id="HangoutUrlDiv"></div>
-<hr>
 
 </body>
 <script>
