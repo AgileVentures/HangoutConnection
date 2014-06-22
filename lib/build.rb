@@ -1,4 +1,3 @@
-require 'debugger'
 xml_template = File.read('./lib/template.xml')
 html = File.read('./lib/websiteone.html')
 js = File.read('./lib/HangoutConnection.js')

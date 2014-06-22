@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-<!-- Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *	
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License
--->
-	<ModulePrefs title="Hangout Starter">
+	<ModulePrefs title="HangoutConnectionApp">
 		<Require feature="rpc" />
 		<Require feature="views" />
 		<Require feature="locked-domain" />
@@ -34,14 +22,16 @@ background-color: orange;
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <h3>WebsiteOne connection service</h3>
+<input type="button" id="btn" value="Click me!"></input>
 
 </body>
 <script>
   function sendUrl(){
   if (gapi.hangout.data.getState()['updated'] != 'true') {
-    var startData = gapi.hangout.getStartData();
-    var callbackUrl = startData
+    var startData = JSON.parse(gapi.hangout.getStartData());
+    var callbackUrl = startData.callbackUrl;
 
+    var topic = startData.topic;
     var hangoutUrl = gapi.hangout.getHangoutUrl();
     var youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
     var participants = gapi.hangout.getParticipants();
@@ -51,9 +41,10 @@ background-color: orange;
       dataType: 'text',
       type: 'PUT',
       data: {
-        "hangout_url": hangoutUrl,
-        "YouTubeLiveId": youTubeLiveId,
-        "participants": participants
+        topic: topic,
+        hangout_url: hangoutUrl,
+        YouTubeLiveId: youTubeLiveId,
+        participants: participants
       }
     })
     gapi.hangout.data.setValue('updated','true');
@@ -65,6 +56,9 @@ function init() {
   gapi.hangout.onApiReady.add(
     function(eventObj) {
     if (eventObj.isApiReady) {
+      $("#btn").click(function() {
+        console.log(gapi.hangout.getTopic());
+      });
       sendUrl();
     }
   });
