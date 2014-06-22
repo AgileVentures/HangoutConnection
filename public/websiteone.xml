@@ -21,18 +21,11 @@
     <html>
 <style type="text/css">
 <!--
-.button {
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
-  background: -moz-linear-gradient(top, #fff, #ddd);  
-  border: 1px solid #bbb;
+body {
+margin: 0px;
+padding: 0px;
+background-color: orange;
 }
-
-.button:active {
-	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333)); 
-	background: -moz-linear-gradient(bottom, #ddd, #aaa); }
-
 -->
 </style>
 <body>
@@ -42,39 +35,29 @@
 
 <h3>WebsiteOne connection service</h3>
 
-<p>
-<input class="button" type="button" value="Show current participants!" id="showParticipants" 
-    style="visibility:hidden;"
-    onClick="showParticipants()"/>
-<input class="button" type="button" value="Get HO url" id="showHoUrl" 
-    style="visibility:visible;"
-    onClick="showHoUrl()"/>
-</p>
-
-<div id="participantsDiv"></div>
-<div id="HangoutUrlDiv"></div>
-<hr>
-
 </body>
 <script>
   function sendUrl(){
-  var startData = gapi.hangout.getStartData();
-  var callbackUrl = startData.replace('http','http');
+  if (gapi.hangout.data.getState()['updated'] != 'true') {
+    var startData = gapi.hangout.getStartData();
+    var callbackUrl = startData
 
-  var hangoutUrl = gapi.hangout.getHangoutUrl();
-  var youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
-  var participants = gapi.hangout.getParticipants();
+    var hangoutUrl = gapi.hangout.getHangoutUrl();
+    var youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
+    var participants = gapi.hangout.getParticipants();
 
-  $.ajax({
-    url: callbackUrl,
-    dataType: 'text',
-    type: 'PUT',
-    data: {
-      "hangout_url": hangoutUrl,
-      "YouTubeLiveId": youTubeLiveId,
-      "participants": participants
-    }
-  })
+    $.ajax({
+      url: callbackUrl,
+      dataType: 'text',
+      type: 'PUT',
+      data: {
+        "hangout_url": hangoutUrl,
+        "YouTubeLiveId": youTubeLiveId,
+        "participants": participants
+      }
+    })
+    gapi.hangout.data.setValue('updated','true');
+  }
 }
 
 function init() {
@@ -91,6 +74,7 @@ function init() {
 function registerInit(){ gadgets.util.registerOnLoadHandler(init) };
 
 registerInit();
+gapi.hangout.hideApp();
 
 </script>
 
