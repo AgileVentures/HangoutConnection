@@ -5,27 +5,37 @@ describe('Hangout Connection App', function(){
     beforeEach(function(){
       spyOn(jQuery, 'ajax');
 
-      onair = { getYouTubeLiveId: function() { return '456IDF65'; } }
       hangout =  {
-        getStartData: function() { return 'http://test.com/5'; },
-        getHangoutUrl: function() { return 'https://hangouts.com/4'; },
-        getParticipants: function() { return {}; },
-        onair: onair
-      }
-      gapi = { hangout: hangout }
+        getStartData: function() {
+          return JSON.stringify({
+              topic: 'Topic',
+              eventId: 'event_id',
+              hangoutId: 'hangout_id',
+              callbackUrl: 'https://test.com/'})},
+          getHangoutUrl: function() { return 'https://hangouts.com/4' },
+          getParticipants: function () { return {} },
+          onair: { getYouTubeLiveId: function() { return '456IDF65' } },
+          data: {
+                  getState: function() { return { updated: false } },
+                  setValue: function(key, value) { return { updated: false } }
+                }
+        };
+      gapi = { hangout: hangout };
 
     });
 
     it('makes request to WSO with correct params', function(){
       sendUrl();
       expect(jQuery.ajax).toHaveBeenCalledWith({
-        url: 'https://test.com/5',
+        url: 'https://test.com/hangout_id',
         dataType: 'text',
         type: 'PUT',
         data: {
-          "hangout_url": 'https://hangouts.com/4',
-          "YouTubeLiveId": '456IDF65',
-          "participants": {}
+          topic: 'Topic',
+          event_id: 'event_id',
+          hangout_url: 'https://hangouts.com/4',
+          YouTubeLiveId: '456IDF65',
+          participants: {}
         }
       });
 
