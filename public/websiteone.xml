@@ -82,9 +82,9 @@
 
   .d-status {
     display: inline-block;
-    vertical-align: middle;
-    width: 11px;
-    height: 11px;
+    vertical-align: sub;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
   }
 
@@ -99,12 +99,16 @@
 
   .ok {
     background-color: hsla(110, 90%, 50%, 1);
-    box-shadow: 0px 0px 10px 0px hsla(110, 90%, 40%, 1);
+    box-shadow: inset 0px 0px 5px 1px hsla(360, 90%, 40%, 1);
+    box-shadow: 0px 0px 10px 1px hsla(110, 90%, 40%, 1);
+    border: 1px solid white;
   }
 
   .error {
     background-color: hsla(10, 90%, 50%, 1);
-    box-shadow: 0px 0px 10px 0px hsla(10, 90%, 40%, 1);
+    box-shadow: inset 0px 0px 5px 1px hsla(360, 90%, 40%, 1);
+    box-shadow: 0px 0px 10px 1px hsla(10, 90%, 40%, 1);
+    border: 1px solid white;
   }
 </style>
 
@@ -115,9 +119,15 @@
 
   <div class='l-main metal'>
     <h3>AgileVentures<br>connection service</h3>
+<<<<<<< HEAD
     <div class='l-group'>
       <div class='l-status'>
         <p>Connection status:&nbsp;&nbsp;<span class='d-status error'>&nbsp;</span></p>
+=======
+    <div class='l-group metal'>
+      <div class='l-status'>
+        <p>Connection status:&nbsp;&nbsp;<span class='d-status ok'>&nbsp;</span></p>
+>>>>>>> b5659de... added connection status rendering
       </div>
       <div class='l-btn-group'>
         <button id="update" class="metal linear">Update HO details</button>
@@ -133,12 +143,19 @@
 
 <script>
   function initialize() {
+<<<<<<< HEAD
   if (gapi.hangout.data.getState()['updated'] != 'true') {
     sendUrl(true);
     gapi.hangout.data.setValue('updated', 'true');
     // setInterval(sendUrl, 300000);
+=======
+  if(gapi.hangout.data.getValue('updated') != 'true') {
+      sendUrl(true);
+      setInterval(sendUrl, 300000);
+>>>>>>> b5659de... added connection status rendering
   } else {
-    gapi.hangout.hideApp();
+      $('.d-status').removeClass('ok error').addClass(gapi.hangout.data.getValue('status'));
+      gapi.hangout.hideApp();
   }
 };
 
@@ -152,13 +169,13 @@ function sendUrl(notify){
     callbackUrl = startData;
   }
 
-  var topic, eventId, hangoutId, callbackUrl;
+  var topic, eventId, category, hangoutId, callbackUrl;
 
   if(startData.topic !== undefined) {
-    var topic = startData.topic,
-    eventId = startData.eventId,
-    category = startData.category,
-    hangoutId = startData.hangoutId,
+    topic = startData.topic;
+    eventId = startData.eventId;
+    category = startData.category;
+    hangoutId = startData.hangoutId;
     callbackUrl = startData.callbackUrl + hangoutId;
   }
 
@@ -179,12 +196,18 @@ function sendUrl(notify){
       hangout_url: hangoutUrl,
       YouTubeLiveId: youTubeLiveId,
       participants: participants,
+      isBroadcasting: isBroadcasting,
       notify: notify
     },
     statusCode: {
       200: function() {
         gapi.hangout.data.setValue('status', 'ok');
         $('.d-status').removeClass('ok error').addClass('ok');
+
+        if (gapi.hangout.data.getValue('updated') != 'true') {
+          gapi.hangout.layout.displayNotice('Connection to WebsiteOne established');
+          gapi.hangout.data.setValue('updated', 'true');
+        }
       },
       500: function() {
         gapi.hangout.data.setValue('status', 'error');
@@ -217,9 +240,7 @@ function init() {
 }
 
 // Wait for gadget to load.
-function registerInit(){ gadgets.util.registerOnLoadHandler(init) };
-
-registerInit();
+!function(){ gadgets.util.registerOnLoadHandler(init) }();
 
 </script>
 

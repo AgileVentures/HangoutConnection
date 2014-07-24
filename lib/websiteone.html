@@ -74,9 +74,9 @@
 
   .d-status {
     display: inline-block;
-    vertical-align: middle;
-    width: 11px;
-    height: 11px;
+    vertical-align: sub;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
   }
 
@@ -91,12 +91,16 @@
 
   .ok {
     background-color: hsla(110, 90%, 50%, 1);
-    box-shadow: 0px 0px 10px 0px hsla(110, 90%, 40%, 1);
+    box-shadow: inset 0px 0px 5px 1px hsla(360, 90%, 40%, 1);
+    box-shadow: 0px 0px 10px 1px hsla(110, 90%, 40%, 1);
+    border: 1px solid white;
   }
 
   .error {
     background-color: hsla(10, 90%, 50%, 1);
-    box-shadow: 0px 0px 10px 0px hsla(10, 90%, 40%, 1);
+    box-shadow: inset 0px 0px 5px 1px hsla(360, 90%, 40%, 1);
+    box-shadow: 0px 0px 10px 1px hsla(10, 90%, 40%, 1);
+    border: 1px solid white;
   }
 </style>
 
@@ -107,9 +111,9 @@
 
   <div class='l-main metal'>
     <h3>AgileVentures<br>connection service</h3>
-    <div class='l-group'>
+    <div class='l-group metal'>
       <div class='l-status'>
-        <p>Connection status:&nbsp;&nbsp;<span class='d-status error'>&nbsp;</span></p>
+        <p>Connection status:&nbsp;&nbsp;<span class='d-status ok'>&nbsp;</span></p>
       </div>
       <div class='l-btn-group'>
         <button id="update" class="metal linear">Update HO details</button>

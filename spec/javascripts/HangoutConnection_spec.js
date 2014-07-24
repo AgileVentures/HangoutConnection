@@ -4,7 +4,7 @@ describe('Hangout Connection App', function(){
     var state = {};
     hangout =  {
       data: {
-        getState: function() { return state; },
+        getValue: function(key) { return state[key]; },
         setValue: function(key, value) { state[key] = value; }
       },
       hideApp: function() {}
@@ -12,6 +12,7 @@ describe('Hangout Connection App', function(){
     gapi = { hangout: hangout };
 
     setFixtures(sandbox({ 'class': 'd-status' }));
+    gapi.hangout.data.setValue('updated', 'false');
   });
 
   describe('initialize', function() {
@@ -19,22 +20,29 @@ describe('Hangout Connection App', function(){
       gapi.hangout.data.setValue('updated','false');
     });
 
-    it('runs only once', function() {
+    it('runs sendUrl() on start if not yet updated', function() {
+      gapi.hangout.data.setValue('updated', undefined);
       spyOn(window,'sendUrl');
-      initialize();
-      initialize();
 
+      initialize();
       expect(window.sendUrl).toHaveBeenCalledWith(true);
-      expect(window.sendUrl.calls.count()).toEqual(1);
     });
 
-    it('runs sendUrl() every 10 seconds', function() {
+    it('does not run sendUrl() on start if already updated', function() {
+      gapi.hangout.data.setValue('updated', 'true');
+      spyOn(window,'sendUrl');
+
+      initialize();
+      expect(window.sendUrl).not.toHaveBeenCalledWith(true);
+    });
+
+    it('runs sendUrl() every 5 minutes', function() {
       jasmine.clock().install();
       spyOn(window,'sendUrl');
       initialize();
 
-      jasmine.clock().tick(10001);
-      jasmine.clock().tick(10001);
+      jasmine.clock().tick(300001);
+      jasmine.clock().tick(300001);
       expect(window.sendUrl.calls.count()).toEqual(3);
 
       jasmine.clock().uninstall();
@@ -57,7 +65,10 @@ describe('Hangout Connection App', function(){
               callbackUrl: 'https://test.com/'})},
           getHangoutUrl: function() { return 'https://hangouts.com/4' },
           getParticipants: function () { return {} },
-          onair: { getYouTubeLiveId: function() { return '456IDF65' } },
+          onair: { getYouTubeLiveId: function() { return '456IDF65' },
+                   isBroadcasting: function() { return true; }
+                 },
+          layout: { displayNotice: function() {} }
         });
 
     });
@@ -79,20 +90,32 @@ describe('Hangout Connection App', function(){
           hangout_url: 'https://hangouts.com/4',
           YouTubeLiveId: '456IDF65',
           participants: {},
+          isBroadcasting: true,
           notify: true
         }
       }));
 
     });
 
-    it('updates connection satus to ok', function(){
+    it('updates connection status to ok', function(){
       jQuery.ajax.and.callFake(function(e) {
         e.statusCode['200']();
       });
 
       sendUrl();
-      expect(gapi.hangout.data.getState()['status']).toEqual('ok');
+      expect(gapi.hangout.data.getValue('status')).toEqual('ok');
       expect($('.d-status')).toHaveClass('ok');
+    });
+
+    it('disaplys notice and sets uptade flag after update', function(){
+      jQuery.ajax.and.callFake(function(e) {
+        e.statusCode['200']();
+      });
+      spyOn(hangout.layout, 'displayNotice');
+
+      sendUrl();
+      expect(gapi.hangout.data.getValue('updated')).toEqual('true');
+      expect(hangout.layout.displayNotice).toHaveBeenCalled();
     });
 
     it('updates connection satus to error', function(){
@@ -101,7 +124,7 @@ describe('Hangout Connection App', function(){
       });
 
       sendUrl();
-      expect(gapi.hangout.data.getState()['status']).toEqual('error');
+      expect(gapi.hangout.data.getValue('status')).toEqual('error');
       expect($('.d-status')).toHaveClass('error');
     });
 
@@ -118,6 +141,7 @@ describe('Hangout Connection App', function(){
           hangout_url: 'https://hangouts.com/4',
           YouTubeLiveId: '456IDF65',
           participants: {},
+          isBroadcasting: true,
           notify: undefined
         }
       }));
