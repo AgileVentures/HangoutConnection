@@ -10,6 +10,7 @@ describe('Hangout Connection App', function(){
           return JSON.stringify({
               topic: 'Topic',
               eventId: 'event_id',
+              category: 'category',
               hangoutId: 'hangout_id',
               callbackUrl: 'https://test.com/'})},
           getHangoutUrl: function() { return 'https://hangouts.com/4' },
@@ -33,6 +34,7 @@ describe('Hangout Connection App', function(){
         data: {
           topic: 'Topic',
           event_id: 'event_id',
+          category: 'category',
           hangout_url: 'https://hangouts.com/4',
           YouTubeLiveId: '456IDF65',
           participants: {}
