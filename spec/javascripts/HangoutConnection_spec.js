@@ -1,11 +1,51 @@
 describe('Hangout Connection App', function(){
 
+  beforeEach(function(){
+    var state = {};
+    hangout =  {
+      data: {
+        getState: function() { return state; },
+        setValue: function(key, value) { state[key] = value; }
+      }
+    };
+    gapi = { hangout: hangout };
+
+  });
+
+  describe('initialize', function() {
+    afterEach(function() {
+      gapi.hangout.data.setValue('updated','false');
+    });
+
+    it('runs only once', function() {
+      spyOn(window,'sendUrl');
+      initialize();
+      initialize();
+
+      expect(window.sendUrl).toHaveBeenCalledWith(true);
+      expect(window.sendUrl.calls.count()).toEqual(1);
+    });
+
+    it('runs sendUrl() every 10 seconds', function() {
+      jasmine.clock().install();
+      spyOn(window,'sendUrl');
+      initialize();
+
+      jasmine.clock().tick(10001);
+      jasmine.clock().tick(10001);
+      expect(window.sendUrl.calls.count()).toEqual(3);
+
+      jasmine.clock().uninstall();
+    });
+
+  });
+
   describe('sendUrl', function(){
 
     beforeEach(function(){
       spyOn(jQuery, 'ajax');
 
-      hangout =  {
+      $.extend(hangout, {
         getStartData: function() {
           return JSON.stringify({
               topic: 'Topic',
@@ -16,17 +56,12 @@ describe('Hangout Connection App', function(){
           getHangoutUrl: function() { return 'https://hangouts.com/4' },
           getParticipants: function () { return {} },
           onair: { getYouTubeLiveId: function() { return '456IDF65' } },
-          data: {
-                  getState: function() { return { updated: false } },
-                  setValue: function(key, value) { return { updated: false } }
-                }
-        };
-      gapi = { hangout: hangout };
+        });
 
     });
 
     it('makes request to WSO with correct params', function(){
-      sendUrl();
+      sendUrl(true);
 
       expect(jQuery.ajax).toHaveBeenCalledWith({
         url: 'https://test.com/hangout_id',
@@ -38,7 +73,8 @@ describe('Hangout Connection App', function(){
           category: 'category',
           hangout_url: 'https://hangouts.com/4',
           YouTubeLiveId: '456IDF65',
-          participants: {}
+          participants: {},
+          notify: true
         }
       });
 
@@ -59,7 +95,8 @@ describe('Hangout Connection App', function(){
           category: undefined,
           hangout_url: 'https://hangouts.com/4',
           YouTubeLiveId: '456IDF65',
-          participants: {}
+          participants: {},
+          notify: undefined
         }
       });
 

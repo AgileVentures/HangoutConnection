@@ -7,34 +7,95 @@
 	</ModulePrefs>
   <Content type="html"><![CDATA[
     <html>
-<style type="text/css">
-<!--
-body {
-margin: 0px;
-padding: 0px;
-background-color: orange;
-}
--->
+<style>
+  body {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .l-main {
+    width: 100%;
+    height: 100%;
+    float: left;
+
+    font: "Droid Sans", "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+  }
+
+  button {
+    border: none;
+    display: block;
+    margin: 0 auto 10 auto;
+  }
+
+  .metal {
+    text-align: center;
+    color: hsla(0,0%,20%,1);
+    text-shadow: hsla(0,0%,40%,.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
+
+    background-color: hsl(0,0%,90%);
+    box-shadow: inset hsla(0,0%,15%,  1) 0  0px 0px 4px, /* border */
+      inset hsla(0,0%,15%, .8) 0 -1px 5px 4px, /* soft SD */
+      inset hsla(0,0%,0%, .25) 0 -1px 0px 7px, /* bottom SD */
+      inset hsla(0,0%,100%,.7) 0  2px 1px 7px, /* top HL */
+
+      hsla(0,0%, 0%,.15) 0 -5px 6px 4px, /* outer SD */
+      hsla(0,0%,100%,.5) 0  5px 6px 4px; /* outer HL */
+  }
+
+  .metal.linear {
+    width: 100px;
+    height: 80px;
+    border-radius: .5em;
+    background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+      -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+      -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+
+      linear-gradient(180deg, hsl(0,0%,78%)  0%, 
+        hsl(0,0%,90%) 47%, 
+        hsl(0,0%,78%) 53%,
+        hsl(0,0%,70%)100%);
+  }
+
+  .metal.linear:active {
+    color: hsl(210, 100%, 40%);
+    text-shadow: hsla(210,100%,20%,.3) 0 -1px 0, hsl(210,100%,85%) 0 2px 1px, hsla(200,100%,80%,1) 0 0 5px, hsla(210,100%,50%,.6) 0 0 20px;
+    box-shadow: 
+      inset hsla(210,100%,30%,  1) 0  0px 0px 4px, /* border */
+      inset hsla(210,100%,15%, .4) 0 -1px 5px 4px, /* soft SD */
+      inset hsla(210,100%,20%,.25) 0 -1px 0px 7px, /* bottom SD */
+      inset hsla(210,100%,100%,.7) 0  2px 1px 7px, /* top HL */
+
+      hsla(210,100%,75%, .8) 0  0px 3px 2px, /* outer SD */
+      hsla(210,50%,40%, .25) 0 -5px 6px 4px, /* outer SD */
+      hsla(210,80%,95%,   1) 0  5px 6px 4px; /* outer HL */
+  }
 </style>
+
 <body>
 
-<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-<h3>WebsiteOne connection service</h3>
-<input type="button" id="btn" value="Click me!"></input>
+  <div class='l-main metal'>
+    <h3>AgileVentures<br>connection service</h3>
+    <div class='l-btn-group'>
+      <button id="update" class="metal linear">Update HO details</button>
+      <button id="notify" class="metal linear">Notify</button>
+    </div>
+  </div>
 
 </body>
+
 <script>
   function initialize() {
   if (gapi.hangout.data.getState()['updated'] != 'true') {
-    sendUrl();
-    gapi.hangout.data.setValue('updated','true');
+    sendUrl(true);
+    gapi.hangout.data.setValue('updated', 'true');
     setInterval(sendUrl, 10000);
   }
 };
 
-function sendUrl(){
+function sendUrl(notify){
 
   var startData = gapi.hangout.getStartData();
 
@@ -68,7 +129,8 @@ function sendUrl(){
       category: category,
       hangout_url: hangoutUrl,
       YouTubeLiveId: youTubeLiveId,
-      participants: participants
+      participants: participants,
+      notify: notify
     }
   })
 }
@@ -79,6 +141,12 @@ function init() {
     function(eventObj) {
     if (eventObj.isApiReady) {
       initialize();
+      $('button#update').click(function(){
+        sendUrl();
+      });
+      $('button#notify').click(function(){
+        sendUrl(true);
+      });
     }
   });
 }
