@@ -13,6 +13,10 @@
     font: "Droid Sans", "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
   }
 
+  .l-btn-group {
+    height: 500px;
+  }
+
   button {
     border: none;
     display: block;
@@ -61,6 +65,30 @@
       hsla(210,50%,40%, .25) 0 -5px 6px 4px, /* outer SD */
       hsla(210,80%,95%,   1) 0  5px 6px 4px; /* outer HL */
   }
+
+  .l-status {
+    padding-left: 10px;
+    text-align: center;
+    margin: 0 auto 0 auto;
+  }
+
+  .d-status {
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .ok {
+    background-color: hsla(110, 90%, 50%, 1);
+    box-shadow: 0px 0px 10px 0px hsla(110, 90%, 40%, 1);
+  }
+
+  .error {
+    background-color: hsla(10, 90%, 50%, 1);
+    box-shadow: 0px 0px 10px 0px hsla(10, 90%, 40%, 1);
+  }
 </style>
 
 <body>
@@ -70,9 +98,15 @@
 
   <div class='l-main metal'>
     <h3>AgileVentures<br>connection service</h3>
+    <div class='l-status'>
+      <p>Connection status: <span class='d-status error'>&nbsp;</span></p>
+    </div>
     <div class='l-btn-group'>
       <button id="update" class="metal linear">Update HO details</button>
       <button id="notify" class="metal linear">Notify</button>
+    </div>
+    <div class=''>
+      <button id="hide" class="metal linear">Hide panel</button>
     </div>
   </div>
 
