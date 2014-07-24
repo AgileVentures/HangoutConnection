@@ -77,15 +77,24 @@
   .l-status {
     padding-left: 10px;
     text-align: center;
-    margin: 0 auto 0 auto;
+    margin: 0 auto 20px auto;
   }
 
   .d-status {
     display: inline-block;
     vertical-align: middle;
-    width: 10px;
-    height: 10px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
+  }
+
+  .l-group {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto 10px auto;
+    border: 1px solid grey;
+    box-shadow: inset 0px 0px 3px grey;
+    border-radius: 5px;
   }
 
   .ok {
@@ -106,15 +115,17 @@
 
   <div class='l-main metal'>
     <h3>AgileVentures<br>connection service</h3>
-    <div class='l-status'>
-      <p>Connection status: <span class='d-status error'>&nbsp;</span></p>
-    </div>
-    <div class='l-btn-group'>
-      <button id="update" class="metal linear">Update HO details</button>
-      <button id="notify" class="metal linear">Notify</button>
-    </div>
-    <div class=''>
-      <button id="hide" class="metal linear">Hide panel</button>
+    <div class='l-group'>
+      <div class='l-status'>
+        <p>Connection status:&nbsp;&nbsp;<span class='d-status error'>&nbsp;</span></p>
+      </div>
+      <div class='l-btn-group'>
+        <button id="update" class="metal linear">Update HO details</button>
+        <button id="notify" class="metal linear">Notify on Slack</button>
+      </div>
+      <div class=''>
+        <button id="hide" class="metal linear">Hide panel</button>
+      </div>
     </div>
   </div>
 
@@ -125,7 +136,7 @@
   if (gapi.hangout.data.getState()['updated'] != 'true') {
     sendUrl(true);
     gapi.hangout.data.setValue('updated', 'true');
-    setInterval(sendUrl, 10000);
+    setInterval(sendUrl, 300000);
   } else {
     gapi.hangout.hideApp();
   }
@@ -154,6 +165,8 @@ function sendUrl(notify){
   var hangoutUrl = gapi.hangout.getHangoutUrl();
   var youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
   var participants = gapi.hangout.getParticipants();
+  var isBroadcasting = gapi.hangout.onair.isBroadcasting();
+
 
   $.ajax({
     url: callbackUrl,
@@ -187,6 +200,9 @@ function init() {
     function(eventObj) {
     if (eventObj.isApiReady) {
       initialize();
+
+      gapi.hangout.onParticipantsChanged.add(function(){});
+
       $('button#update').click(function(){
         sendUrl();
       });
