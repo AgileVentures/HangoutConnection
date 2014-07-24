@@ -26,46 +26,51 @@ background-color: orange;
 
 </body>
 <script>
-  function sendUrl(){
+  function initialize() {
   if (gapi.hangout.data.getState()['updated'] != 'true') {
-
-    var startData = gapi.hangout.getStartData();
-
-    try {
-      startData = JSON.parse(startData);
-    } catch(err) {
-      callbackUrl = startData;
-    }
-
-    var topic, eventId, hangoutId, callbackUrl;
-
-    if(startData.topic !== undefined) {
-      var topic = startData.topic,
-          eventId = startData.eventId,
-          category = startData.category,
-          hangoutId = startData.hangoutId,
-          callbackUrl = startData.callbackUrl + hangoutId;
-    }
-
-    var hangoutUrl = gapi.hangout.getHangoutUrl();
-    var youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
-    var participants = gapi.hangout.getParticipants();
-
-    $.ajax({
-      url: callbackUrl,
-      dataType: 'text',
-      type: 'PUT',
-      data: {
-        topic: topic,
-        event_id: eventId,
-        category: category,
-        hangout_url: hangoutUrl,
-        YouTubeLiveId: youTubeLiveId,
-        participants: participants
-      }
-    })
+    sendUrl();
     gapi.hangout.data.setValue('updated','true');
+    setInterval(sendUrl, 10000);
   }
+};
+
+function sendUrl(){
+
+  var startData = gapi.hangout.getStartData();
+
+  try {
+    startData = JSON.parse(startData);
+  } catch(err) {
+    callbackUrl = startData;
+  }
+
+  var topic, eventId, hangoutId, callbackUrl;
+
+  if(startData.topic !== undefined) {
+    var topic = startData.topic,
+    eventId = startData.eventId,
+    category = startData.category,
+    hangoutId = startData.hangoutId,
+    callbackUrl = startData.callbackUrl + hangoutId;
+  }
+
+  var hangoutUrl = gapi.hangout.getHangoutUrl();
+  var youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
+  var participants = gapi.hangout.getParticipants();
+
+  $.ajax({
+    url: callbackUrl,
+    dataType: 'text',
+    type: 'PUT',
+    data: {
+      topic: topic,
+      event_id: eventId,
+      category: category,
+      hangout_url: hangoutUrl,
+      YouTubeLiveId: youTubeLiveId,
+      participants: participants
+    }
+  })
 }
 
 function init() {
@@ -73,10 +78,7 @@ function init() {
   gapi.hangout.onApiReady.add(
     function(eventObj) {
     if (eventObj.isApiReady) {
-      $("#btn").click(function() {
-        console.log(gapi.hangout.getTopic());
-      });
-      sendUrl();
+      initialize();
     }
   });
 }
@@ -85,7 +87,7 @@ function init() {
 function registerInit(){ gadgets.util.registerOnLoadHandler(init) };
 
 registerInit();
-gapi.hangout.hideApp();
+// gapi.hangout.hideApp();
 
 </script>
 
