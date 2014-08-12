@@ -161,22 +161,14 @@
 
 function sendUrl(notify){
 
+  var callbackUrl;
   var startData = gapi.hangout.getStartData();
 
   try {
     startData = JSON.parse(startData);
+    callbackUrl = startData.callbackUrl + startData.hangoutId;
   } catch(err) {
     callbackUrl = startData;
-  }
-
-  var topic, eventId, category, hangoutId, callbackUrl;
-
-  if(startData.topic !== undefined) {
-    topic = startData.topic;
-    eventId = startData.eventId;
-    category = startData.category;
-    hangoutId = startData.hangoutId;
-    callbackUrl = startData.callbackUrl + hangoutId;
   }
 
   var hangoutUrl = gapi.hangout.getHangoutUrl();
@@ -190,13 +182,15 @@ function sendUrl(notify){
     dataType: 'text',
     type: 'PUT',
     data: {
-      topic: topic,
-      event_id: eventId,
-      category: category,
-      hangout_url: hangoutUrl,
-      YouTubeLiveId: youTubeLiveId,
+      title: startData.title,
+      project_id: startData.projectId,
+      event_id: startData.eventId,
+      category: startData.category,
+      host_id: startData.hostId,
       participants: participants,
-      isBroadcasting: isBroadcasting,
+      hangout_url: hangoutUrl,
+      yt_video_id: youTubeLiveId,
+      // isBroadcasting: isBroadcasting,
       notify: notify
     },
     statusCode: {
