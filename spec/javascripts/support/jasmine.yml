@@ -54,6 +54,7 @@ helpers:
 #
 spec_files:
   - '**/*[sS]pec.js'
+  - '**/HangoutConnectionS.js'
 
 # src_dir
 #
