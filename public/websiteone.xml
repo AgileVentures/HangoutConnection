@@ -186,6 +186,7 @@
           type: 'PUT',
           data: {
             title: startData.title,
+            topic: startData.title,
             project_id: startData.projectId,
             event_id: startData.eventId,
             category: startData.category,
