@@ -16,8 +16,6 @@
   }
 
   .m-bg-linear {
-    width: 100px;
-    height: 80px;
     border-radius: .5em;
     background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
       -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
@@ -52,6 +50,7 @@
 /* BLOKS  */
 
   .panel {
+    position: relative;
     text-align: center;
 
     width: 100%;
@@ -61,7 +60,7 @@
 
   .controls {
     width: 90%;
-    height: 90%;
+    height: 85%;
     margin: 0 auto 10px auto;
     border: 1px solid grey;
     box-shadow: inset 0px 0px 3px grey;
@@ -97,6 +96,9 @@
   }
 
   .controls__btn {
+    width: 100px;
+    height: 70px;
+
     border: none;
     display: block;
     margin: 0 auto 10 auto;
@@ -134,13 +136,22 @@
     margin-left: auto;
     margin-right: auto;
   }
+
+  .footer {
+    font-size: smaller;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
 
 <body>
 
   <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="timer.js"></script>
 
   <div class='panel m-bg-metal'>
     <h3>AgileVentures<br>connection service</h3>
@@ -163,8 +174,10 @@
         </div>
       </div>
     </div>
+    <div class='footer'>
+      <p>WorkspaceOnAir - tools for online collaboration</p>
+    </div>
   </div>
-
 </body>
 
 <script>

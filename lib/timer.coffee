@@ -1,5 +1,5 @@
 class Timer
-  constructor: (@preset = 15000)->
+  constructor: (@preset = 900000)->
     @timerId = 0
     @time = 0
     @countdown = false
@@ -41,3 +41,5 @@ class Timer
     $('.js-timer-start').click @startTimer
     $('.js-timer-stop').click @stopTimer
     $('.js-timer-countdown').click @startCountdown
+
+@Timer = Timer
