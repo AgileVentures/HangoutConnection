@@ -7,6 +7,8 @@
       $('button#notify').click => @sendUrl(true)
       $('button#hide').click gapi.hangout.hideApp
 
+      (new Timer).init()
+
       @sendUrl true
       setInterval @sendUrl, 300000
     else
