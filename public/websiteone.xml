@@ -297,7 +297,7 @@
           err = _error;
           callbackUrl = startData;
         }
-        callbackUrl.replace("http", "https");
+        callbackUrl = callbackUrl.replace("http", "https");
         hangoutUrl = gapi.hangout.getHangoutUrl();
         youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
         participants = gapi.hangout.getParticipants();
