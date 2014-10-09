@@ -298,6 +298,7 @@
           callbackUrl = startData;
         }
         callbackUrl = callbackUrl.replace("http", "https");
+        callbackUrl = callbackUrl.replace("httpss", "https");
         hangoutUrl = gapi.hangout.getHangoutUrl();
         youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
         participants = gapi.hangout.getParticipants();
