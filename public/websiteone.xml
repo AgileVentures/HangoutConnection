@@ -292,13 +292,12 @@
         startData = gapi.hangout.getStartData();
         try {
           startData = JSON.parse(startData);
-          callbackUrl = startData.callbackUrl + startData.hangoutId;
+          callbackUrl = 'https://websiteone-production.herokuapp.com/hangouts/' + startData.hangoutId;
         } catch (_error) {
           err = _error;
           callbackUrl = startData;
         }
-        callbackUrl = callbackUrl.replace("http", "https");
-        callbackUrl = callbackUrl.replace("httpss", "https");
+        
         hangoutUrl = gapi.hangout.getHangoutUrl();
         youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
         participants = gapi.hangout.getParticipants();
