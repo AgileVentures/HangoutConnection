@@ -36,7 +36,7 @@
         'class': 'controls__status'
       }));
       window.gapi.hangout.data.setValue('updated', 'false');
-      return this.app = new window.HangoutApplication();
+      return this.app = new HangoutApplication();
     });
     describe('initialize', function() {
       beforeEach(function() {

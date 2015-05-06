@@ -20,7 +20,7 @@ describe 'Hangout Connection App', ->
     setFixtures sandbox({ 'class': 'controls__status' })
 
     window.gapi.hangout.data.setValue 'updated', 'false'
-    @app = new window.HangoutApplication()
+    @app = new HangoutApplication()
 
   describe 'initialize', ->
     beforeEach ->

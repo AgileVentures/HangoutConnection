@@ -1,5 +1,5 @@
-@HangoutApplication = ->
-  @initialize = =>
+class HangoutApplication
+  initialize: =>
     if gapi.hangout.data.getValue('updated') isnt 'true'
       # gapi.hangout.onParticipantsChanged.add(->)
 
@@ -15,12 +15,11 @@
       $('.controls__status').removeClass('controls__status--ok controls__status--error').addClass "controls__status--#{gapi.hangout.data.getValue 'status'}"
       # gapi.hangout.showApp()
 
-  @init = =>
+  init: =>
     gapi.hangout.onApiReady.add (eventObj)=>
       @initialize() if eventObj.isApiReady
 
-  @sendUrl = (notify)=>
-
+  sendUrl: (notify)=>
     startData = gapi.hangout.getStartData()
 
     try
@@ -62,6 +61,7 @@
         $('.controls__status').removeClass('controls__status--ok controls__status--error').addClass 'controls__status--error'
       }
 
-  return true
+root = exports ? window
+root.HangoutApplication = HangoutApplication
 
 gadgets.util.registerOnLoadHandler((new HangoutApplication()).init) if gadgets?
