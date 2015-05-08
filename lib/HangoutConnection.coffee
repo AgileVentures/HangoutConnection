@@ -27,7 +27,7 @@
       startData = JSON.parse startData
       callbackUrl = startData.callbackUrl + startData.hangoutId
     catch err
-      callbackUrl = startData;
+      callbackUrl = startData
 
     hangoutUrl = gapi.hangout.getHangoutUrl()
     youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId()

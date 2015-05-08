@@ -17,7 +17,7 @@ describe 'Hangout Connection App', ->
     }
     window.gapi = { hangout: @hangout }
 
-    setFixtures sandbox({ 'class': 'd-status' })
+    setFixtures sandbox({ 'class': 'controls__status' })
 
     window.gapi.hangout.data.setValue 'updated', 'false'
     @app = new window.HangoutApplication()
@@ -96,15 +96,15 @@ describe 'Hangout Connection App', ->
 
     it 'updates connection status to ok', ->
       jQuery.ajax.and.callFake (e)->
-        e.statusCode['200']()
+        e.success()
 
       @app.sendUrl()
       expect(gapi.hangout.data.getValue('status')).toEqual('ok')
-      expect($('.d-status')).toHaveClass('ok')
+      expect($('.controls__status')).toHaveClass('controls__status--ok')
 
-    it 'disaplys notice and sets uptade flag after update', ->
+    it 'displays notice and sets uptade flag after update', ->
       jQuery.ajax.and.callFake (e)->
-        e.statusCode['200']()
+        e.success()
 
       spyOn(@hangout.layout, 'displayNotice')
 
@@ -114,11 +114,11 @@ describe 'Hangout Connection App', ->
 
     it 'updates connection satus to error on failure', ->
       jQuery.ajax.and.callFake (e)->
-        e.statusCode['500']()
+        e.error()
 
       @app.sendUrl()
       expect(gapi.hangout.data.getValue('status')).toEqual('error')
-      expect($('.d-status')).toHaveClass('error')
+      expect($('.controls__status')).toHaveClass('controls__status--error')
 
     it 'makes request to WSO with correct params if callbackUrl in v0 format', ->
 
@@ -137,4 +137,4 @@ describe 'Hangout Connection App', ->
           yt_video_id: '456IDF65',
           notify: undefined
         }
-      }));
+      }))
