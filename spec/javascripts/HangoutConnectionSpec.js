@@ -60,7 +60,7 @@
       return it('sets refresh interval', function() {
         spyOn(window, 'setInterval');
         this.app.initialize();
-        return expect(window.setInterval).toHaveBeenCalledWith(this.app.sendUrl, 300000);
+        return expect(window.setInterval).toHaveBeenCalledWith(this.app.sendUrl, 120000);
       });
     });
     return describe('sendUrl', function() {
@@ -75,7 +75,7 @@
               category: 'category',
               hostId: 'host_id',
               hangoutId: 'hangout_id',
-              callbackUrl: 'https://test.com/'
+              callbackUrl: '//test.com/'
             });
           },
           getHangoutUrl: function() {
@@ -100,7 +100,7 @@
       it('makes request to WSO with correct params', function() {
         this.app.sendUrl(true);
         expect(jQuery.ajax).toHaveBeenCalledWith(jasmine.objectContaining({
-          url: 'https://test.com/hangout_id'
+          url: '//test.com/hangout_id'
         }));
         expect(jQuery.ajax).toHaveBeenCalledWith(jasmine.objectContaining({
           dataType: 'text'

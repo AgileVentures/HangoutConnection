@@ -1,7 +1,6 @@
 class HangoutApplication
   initialize: =>
     if gapi.hangout.data.getValue('updated') isnt 'true'
-      # gapi.hangout.onParticipantsChanged.add(->)
 
       $('button#update').click => @sendUrl()
       $('button#notify').click => @sendUrl true
@@ -10,10 +9,11 @@ class HangoutApplication
       (new window.Timer).init()
 
       @sendUrl true
-      setInterval @sendUrl, 300000
+      setInterval @sendUrl, 120000
     else
-      $('.controls__status').removeClass('controls__status--ok controls__status--error').addClass "controls__status--#{gapi.hangout.data.getValue 'status'}"
-      # gapi.hangout.showApp()
+      $('.controls__status')
+        .removeClass('controls__status--ok controls__status--error')
+        .addClass("controls__status--#{gapi.hangout.data.getValue 'status'}")
 
   init: =>
     gapi.hangout.onApiReady.add (eventObj)=>
@@ -55,10 +55,14 @@ class HangoutApplication
           gapi.hangout.layout.displayNotice 'Connection to WebsiteOne established'
           gapi.hangout.data.setValue 'updated', 'true'
 
-        $('.controls__status').removeClass('controls__status--error').addClass 'controls__status--ok'
+        $('.controls__status')
+          .removeClass('controls__status--error')
+          .addClass('controls__status--ok')
       error: ->
         gapi.hangout.data.setValue 'status', 'error'
-        $('.controls__status').removeClass('controls__status--ok controls__status--error').addClass 'controls__status--error'
+        $('.controls__status')
+          .removeClass('controls__status--ok controls__status--error')
+          .addClass('controls__status--error')
       }
 
 root = exports ? window

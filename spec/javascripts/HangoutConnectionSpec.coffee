@@ -44,7 +44,7 @@ describe 'Hangout Connection App', ->
     it 'sets refresh interval', ->
       spyOn(window, 'setInterval')
       @app.initialize()
-      expect(window.setInterval).toHaveBeenCalledWith(@app.sendUrl, 300000)
+      expect(window.setInterval).toHaveBeenCalledWith(@app.sendUrl, 120000)
 
   describe 'sendUrl', ->
     beforeEach ->
@@ -59,7 +59,7 @@ describe 'Hangout Connection App', ->
             category: 'category',
             hostId: 'host_id',
             hangoutId: 'hangout_id',
-            callbackUrl: 'https://test.com/'
+            callbackUrl: '//test.com/'
           },
         getHangoutUrl: -> 'https://hangouts.com/4',
         getParticipants: -> {},
@@ -74,7 +74,7 @@ describe 'Hangout Connection App', ->
       @app.sendUrl true
 
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
-        url: 'https://test.com/hangout_id'})
+        url: '//test.com/hangout_id'})
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
         dataType: 'text'})
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
