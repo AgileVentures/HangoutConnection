@@ -15,7 +15,7 @@ class HangoutApplication
         .removeClass('controls__status--ok controls__status--error')
         .addClass("controls__status--#{gapi.hangout.data.getValue 'status'}")
 
-  init: =>
+  constructor: ->
     gapi.hangout.onApiReady.add (eventObj)=>
       @initialize() if eventObj.isApiReady
 
@@ -68,4 +68,4 @@ class HangoutApplication
 root = exports ? window
 root.HangoutApplication = HangoutApplication
 
-gadgets.util.registerOnLoadHandler((new HangoutApplication()).init) if gadgets?
+gadgets.util.registerOnLoadHandler((new HangoutApplication())) if gadgets?

@@ -10,26 +10,31 @@ describe 'Hangout Connection App', ->
             },
       hideApp: ->,
       onParticipantsChanged: { add : -> },
-      onApiReady: {
-        add: (callback)-> @trigger = callback,
-        trigger: ''
-      }
+      onApiReady: { add: -> },
+      onair: { onBroadcastingChanged: { add: -> } }
     }
     window.gapi = { hangout: @hangout }
 
     setFixtures sandbox({ 'class': 'controls__status' })
 
     window.gapi.hangout.data.setValue 'updated', 'false'
-    @app = new HangoutApplication()
+
+  describe 'constructor', ->
+    it 'add callback on constructor', ->
+      spyOn(gapi.hangout.onApiReady, 'add')
+      new HangoutApplication()
+      expect(gapi.hangout.onApiReady.add).toHaveBeenCalled()
 
   describe 'initialize', ->
     beforeEach ->
+      @app = new HangoutApplication()
       spyOn @app, 'sendUrl'
       spyOn(gapi.hangout.onParticipantsChanged, 'add')
       @jQuerySpy = spyOn jQuery.fn, 'click'
 
     afterEach ->
       gapi.hangout.data.setValue 'updated', 'false'
+
 
     it 'runs sendUrl() on start if not yet updated', ->
       gapi.hangout.data.setValue 'updated', undefined
@@ -48,6 +53,7 @@ describe 'Hangout Connection App', ->
 
   describe 'sendUrl', ->
     beforeEach ->
+      @app = new HangoutApplication()
       spyOn jQuery, 'ajax'
 
       $.extend @hangout, {

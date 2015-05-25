@@ -23,10 +23,12 @@
           add: function() {}
         },
         onApiReady: {
-          add: function(callback) {
-            return this.trigger = callback;
-          },
-          trigger: ''
+          add: function() {}
+        },
+        onair: {
+          onBroadcastingChanged: {
+            add: function() {}
+          }
         }
       };
       window.gapi = {
@@ -35,11 +37,18 @@
       setFixtures(sandbox({
         'class': 'controls__status'
       }));
-      window.gapi.hangout.data.setValue('updated', 'false');
-      return this.app = new HangoutApplication();
+      return window.gapi.hangout.data.setValue('updated', 'false');
+    });
+    describe('constructor', function() {
+      return it('add callback on constructor', function() {
+        spyOn(gapi.hangout.onApiReady, 'add');
+        new HangoutApplication();
+        return expect(gapi.hangout.onApiReady.add).toHaveBeenCalled();
+      });
     });
     describe('initialize', function() {
       beforeEach(function() {
+        this.app = new HangoutApplication();
         spyOn(this.app, 'sendUrl');
         spyOn(gapi.hangout.onParticipantsChanged, 'add');
         return this.jQuerySpy = spyOn(jQuery.fn, 'click');
@@ -65,6 +74,7 @@
     });
     return describe('sendUrl', function() {
       beforeEach(function() {
+        this.app = new HangoutApplication();
         spyOn(jQuery, 'ajax');
         return $.extend(this.hangout, {
           getStartData: function() {
