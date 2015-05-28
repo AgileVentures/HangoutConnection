@@ -9,9 +9,26 @@ describe 'Hangout Connection App', ->
               setValue: (key, value)-> state[key] = value
             },
       hideApp: ->,
-      onParticipantsChanged: { add : -> },
-      onApiReady: { add: -> },
-      onair: { onBroadcastingChanged: { add: -> } }
+      onParticipantsChanged: { add: -> },
+      onApiReady: { add: (callback) -> callback({isApiReady: true}) },
+      getStartData: ->
+        JSON.stringify {
+          title: 'Topic',
+          projectId: 'project_id',
+          eventId: 'event_id',
+          category: 'category',
+          hostId: 'host_id',
+          hangoutId: 'hangout_id',
+          callbackUrl: '//test.com/'
+        },
+      getHangoutUrl: -> 'https://hangouts.com/4',
+      getParticipants: -> {},
+      onair: {
+        onBroadcastingChanged: { add: -> },
+        getYouTubeLiveId: -> ('456IDF65'),
+        isBroadcasting: -> true
+      },
+      layout: { displayNotice: -> }
     }
     window.gapi = { hangout: @hangout }
 
@@ -35,7 +52,6 @@ describe 'Hangout Connection App', ->
     afterEach ->
       gapi.hangout.data.setValue 'updated', 'false'
 
-
     it 'runs sendUrl() on start if not yet updated', ->
       gapi.hangout.data.setValue 'updated', undefined
       @app.initialize()
@@ -55,26 +71,6 @@ describe 'Hangout Connection App', ->
     beforeEach ->
       @app = new HangoutApplication()
       spyOn jQuery, 'ajax'
-
-      $.extend @hangout, {
-        getStartData: ->
-          JSON.stringify {
-            title: 'Topic',
-            projectId: 'project_id',
-            eventId: 'event_id',
-            category: 'category',
-            hostId: 'host_id',
-            hangoutId: 'hangout_id',
-            callbackUrl: '//test.com/'
-          },
-        getHangoutUrl: -> 'https://hangouts.com/4',
-        getParticipants: -> {},
-        onair: {
-                  getYouTubeLiveId: -> ('456IDF65'),
-                  isBroadcasting: -> true
-               },
-        layout: { displayNotice: -> }
-    }
 
     it 'makes request to WSO with correct params', ->
       @app.sendUrl true

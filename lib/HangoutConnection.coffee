@@ -1,4 +1,8 @@
 class HangoutApplication
+  constructor: ->
+    gapi.hangout.onApiReady.add (eventObj)=>
+      @initialize() if eventObj.isApiReady
+
   initialize: =>
     if gapi.hangout.data.getValue('updated') isnt 'true'
 
@@ -14,10 +18,6 @@ class HangoutApplication
       $('.controls__status')
         .removeClass('controls__status--ok controls__status--error')
         .addClass("controls__status--#{gapi.hangout.data.getValue 'status'}")
-
-  constructor: ->
-    gapi.hangout.onApiReady.add (eventObj)=>
-      @initialize() if eventObj.isApiReady
 
   sendUrl: (notify)=>
     startData = gapi.hangout.getStartData()

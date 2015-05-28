@@ -23,12 +23,42 @@
           add: function() {}
         },
         onApiReady: {
-          add: function() {}
+          add: function(callback) {
+            return callback({
+              isApiReady: true
+            });
+          }
+        },
+        getStartData: function() {
+          return JSON.stringify({
+            title: 'Topic',
+            projectId: 'project_id',
+            eventId: 'event_id',
+            category: 'category',
+            hostId: 'host_id',
+            hangoutId: 'hangout_id',
+            callbackUrl: '//test.com/'
+          });
+        },
+        getHangoutUrl: function() {
+          return 'https://hangouts.com/4';
+        },
+        getParticipants: function() {
+          return {};
         },
         onair: {
           onBroadcastingChanged: {
             add: function() {}
+          },
+          getYouTubeLiveId: function() {
+            return '456IDF65';
+          },
+          isBroadcasting: function() {
+            return true;
           }
+        },
+        layout: {
+          displayNotice: function() {}
         }
       };
       window.gapi = {
@@ -75,37 +105,7 @@
     return describe('sendUrl', function() {
       beforeEach(function() {
         this.app = new HangoutApplication();
-        spyOn(jQuery, 'ajax');
-        return $.extend(this.hangout, {
-          getStartData: function() {
-            return JSON.stringify({
-              title: 'Topic',
-              projectId: 'project_id',
-              eventId: 'event_id',
-              category: 'category',
-              hostId: 'host_id',
-              hangoutId: 'hangout_id',
-              callbackUrl: '//test.com/'
-            });
-          },
-          getHangoutUrl: function() {
-            return 'https://hangouts.com/4';
-          },
-          getParticipants: function() {
-            return {};
-          },
-          onair: {
-            getYouTubeLiveId: function() {
-              return '456IDF65';
-            },
-            isBroadcasting: function() {
-              return true;
-            }
-          },
-          layout: {
-            displayNotice: function() {}
-          }
-        });
+        return spyOn(jQuery, 'ajax');
       });
       it('makes request to WSO with correct params', function() {
         this.app.sendUrl(true);
