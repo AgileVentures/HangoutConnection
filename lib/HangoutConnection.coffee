@@ -16,7 +16,7 @@ class HangoutApplication
 
       @hoa_status = 'started'
       @sendUrl true
-      setInterval @sendUrl, 120000
+      @interval = setInterval @sendUrl, 120000
     else
       $('.controls__status')
         .removeClass('controls__status--ok controls__status--error')
@@ -34,7 +34,7 @@ class HangoutApplication
 
     if prev_hoa_status isnt @hoa_status
       @sendUrl()
-      clearInterval(@sendUrl) if @hoa_status == 'finished'
+      clearInterval(@interval) if @hoa_status == 'finished'
 
   sendUrl: (notify)=>
     startData = JSON.parse gapi.hangout.getStartData()
