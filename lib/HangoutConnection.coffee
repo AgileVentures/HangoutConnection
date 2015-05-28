@@ -1,7 +1,9 @@
 class HangoutApplication
   constructor: ->
     gapi.hangout.onApiReady.add (eventObj)=>
-      @initialize() if eventObj.isApiReady
+      if eventObj.isApiReady
+        @initialize()
+        gapi.hangout.onair.onBroadcastingChanged.add @changeHoaStatus
 
   initialize: =>
     if gapi.hangout.data.getValue('updated') isnt 'true'
@@ -12,12 +14,26 @@ class HangoutApplication
 
       (new window.Timer).init()
 
+      @hoa_status = 'started'
       @sendUrl true
       setInterval @sendUrl, 120000
     else
       $('.controls__status')
         .removeClass('controls__status--ok controls__status--error')
         .addClass("controls__status--#{gapi.hangout.data.getValue 'status'}")
+
+  changeHoaStatus: (e) =>
+    prev_hoa_status = @hoa_status
+
+    @hoa_status = if e.isBroadcasting and prev_hoa_status is 'started'
+      'broadcasting'
+    else if not e.isBroadcasting and prev_hoa_status is 'broadcasting'
+      'finished'
+    else
+      prev_hoa_status
+
+    if prev_hoa_status isnt @hoa_status
+      @sendUrl()
 
   sendUrl: (notify)=>
     startData = JSON.parse gapi.hangout.getStartData()
@@ -27,6 +43,7 @@ class HangoutApplication
     youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId()
     participants = gapi.hangout.getParticipants()
     isBroadcasting = gapi.hangout.onair.isBroadcasting()
+    hoa_status = @hoa_status
 
     $.ajax {
       url: callbackUrl,
@@ -41,7 +58,7 @@ class HangoutApplication
         participants: participants,
         hangout_url: hangoutUrl,
         yt_video_id: youTubeLiveId,
-        # isBroadcasting: isBroadcasting,
+        hoa_status: hoa_status,
         notify: notify
       success: ->
         gapi.hangout.data.setValue('status', 'ok')

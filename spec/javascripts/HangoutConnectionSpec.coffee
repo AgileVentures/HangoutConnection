@@ -67,9 +67,47 @@ describe 'Hangout Connection App', ->
       @app.initialize()
       expect(window.setInterval).toHaveBeenCalledWith(@app.sendUrl, 120000)
 
+    it 'sets hoa_status to "started"', ->
+      gapi.hangout.data.setValue 'updated', undefined
+      @app.initialize()
+      expect(@app.hoa_status).toEqual('started')
+
+  describe 'changeHoaStatus', ->
+    beforeEach ->
+      spyOn jQuery, 'ajax'
+      @app = new HangoutApplication()
+
+    it "sendUrl first time with hoa status of 'started' and notify true", ->
+      expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
+        data: {
+          title: 'Topic',
+          project_id: 'project_id',
+          event_id: 'event_id',
+          category: 'category',
+          host_id: 'host_id',
+          participants: {},
+          hangout_url: 'https://hangouts.com/4',
+          yt_video_id: '456IDF65',
+          hoa_status: 'started',
+          notify: true
+        }
+      })
+
+    it "change from 'started' to 'broadcasting' if 'broadcasting'", ->
+      @app.changeHoaStatus(isBroadcasting: true)
+      expect(@app.hoa_status).toEqual('broadcasting')
+      expect(jQuery.ajax).toHaveBeenCalled()
+
+    it "change from 'broadcasting' to 'finish' if end 'broadcasting'", ->
+      @app.changeHoaStatus(isBroadcasting: true)
+      @app.changeHoaStatus(isBroadcasting: false)
+      expect(@app.hoa_status).toEqual('finished')
+      expect(jQuery.ajax).toHaveBeenCalled()
+
   describe 'sendUrl', ->
     beforeEach ->
       @app = new HangoutApplication()
+      @app.hoa_status = 'any hoa_status'
       spyOn jQuery, 'ajax'
 
     it 'makes request to WSO with correct params', ->
@@ -91,7 +129,7 @@ describe 'Hangout Connection App', ->
           participants: {},
           hangout_url: 'https://hangouts.com/4',
           yt_video_id: '456IDF65',
-          # isBroadcasting: true,
+          hoa_status: 'any hoa_status',
           notify: true
         }
       })
