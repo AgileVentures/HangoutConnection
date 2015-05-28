@@ -34,6 +34,7 @@ class HangoutApplication
 
     if prev_hoa_status isnt @hoa_status
       @sendUrl()
+      clearInterval(@sendUrl) if @hoa_status == 'finished'
 
   sendUrl: (notify)=>
     startData = JSON.parse gapi.hangout.getStartData()
