@@ -121,22 +121,3 @@ describe 'Hangout Connection App', ->
       @app.sendUrl()
       expect(gapi.hangout.data.getValue('status')).toEqual('error')
       expect($('.controls__status')).toHaveClass('controls__status--error')
-
-    it 'makes request to WSO with correct params if callbackUrl in v0 format', ->
-
-      @hangout.getStartData = -> 'https://hangouts.com/id'
-      @app.sendUrl()
-
-      expect(jQuery.ajax).toHaveBeenCalledWith(jasmine.objectContaining({
-        data: {
-          title: undefined,
-          project_id: undefined,
-          event_id: undefined,
-          category: undefined,
-          host_id: undefined,
-          participants: {},
-          hangout_url: 'https://hangouts.com/4',
-          yt_video_id: '456IDF65',
-          notify: undefined
-        }
-      }))

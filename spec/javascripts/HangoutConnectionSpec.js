@@ -149,32 +149,13 @@
         expect(gapi.hangout.data.getValue('updated')).toEqual('true');
         return expect(this.hangout.layout.displayNotice).toHaveBeenCalled();
       });
-      it('updates connection satus to error on failure', function() {
+      return it('updates connection satus to error on failure', function() {
         jQuery.ajax.and.callFake(function(e) {
           return e.error();
         });
         this.app.sendUrl();
         expect(gapi.hangout.data.getValue('status')).toEqual('error');
         return expect($('.controls__status')).toHaveClass('controls__status--error');
-      });
-      return it('makes request to WSO with correct params if callbackUrl in v0 format', function() {
-        this.hangout.getStartData = function() {
-          return 'https://hangouts.com/id';
-        };
-        this.app.sendUrl();
-        return expect(jQuery.ajax).toHaveBeenCalledWith(jasmine.objectContaining({
-          data: {
-            title: void 0,
-            project_id: void 0,
-            event_id: void 0,
-            category: void 0,
-            host_id: void 0,
-            participants: {},
-            hangout_url: 'https://hangouts.com/4',
-            yt_video_id: '456IDF65',
-            notify: void 0
-          }
-        }));
       });
     });
   });

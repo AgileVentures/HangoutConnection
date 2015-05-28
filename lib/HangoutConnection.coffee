@@ -20,14 +20,9 @@ class HangoutApplication
         .addClass("controls__status--#{gapi.hangout.data.getValue 'status'}")
 
   sendUrl: (notify)=>
-    startData = gapi.hangout.getStartData()
+    startData = JSON.parse gapi.hangout.getStartData()
 
-    try
-      startData = JSON.parse startData
-      callbackUrl = startData.callbackUrl + startData.hangoutId
-    catch err
-      callbackUrl = startData
-
+    callbackUrl = startData.callbackUrl + startData.hangoutId
     hangoutUrl = gapi.hangout.getHangoutUrl()
     youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId()
     participants = gapi.hangout.getParticipants()
