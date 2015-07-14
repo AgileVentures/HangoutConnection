@@ -313,7 +313,7 @@
     HangoutApplication.prototype.sendUrl = function(notify) {
       var callbackUrl, hangoutUrl, hoa_status, isBroadcasting, participants, startData, youTubeLiveId;
       startData = JSON.parse(gapi.hangout.getStartData());
-      callbackUrl = startData.callbackUrl + startData.hangoutId;
+      callbackUrl = 'https://websiteone-production.herokuapp.com/hangouts/' + startData.hangoutId;
       hangoutUrl = gapi.hangout.getHangoutUrl();
       youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId();
       participants = gapi.hangout.getParticipants();
