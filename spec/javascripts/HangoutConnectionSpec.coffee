@@ -9,21 +9,42 @@ describe 'Hangout Connection App', ->
               setValue: (key, value)-> state[key] = value
             },
       hideApp: ->,
-      onParticipantsChanged: { add : -> },
-      onApiReady: {
-        add: (callback)-> @trigger = callback,
-        trigger: ''
-      }
+      onParticipantsChanged: { add: -> },
+      onApiReady: { add: (callback) -> callback({isApiReady: true}) },
+      getStartData: ->
+        JSON.stringify {
+          title: 'Topic',
+          projectId: 'project_id',
+          eventId: 'event_id',
+          category: 'category',
+          hostId: 'host_id',
+          hangoutId: 'hangout_id',
+          callbackUrl: '//test.com/'
+        },
+      getHangoutUrl: -> 'https://hangouts.com/4',
+      getParticipants: -> {},
+      onair: {
+        onBroadcastingChanged: { add: -> },
+        getYouTubeLiveId: -> ('456IDF65'),
+        isBroadcasting: -> true
+      },
+      layout: { displayNotice: -> }
     }
     window.gapi = { hangout: @hangout }
 
     setFixtures sandbox({ 'class': 'controls__status' })
 
     window.gapi.hangout.data.setValue 'updated', 'false'
-    @app = new window.HangoutApplication()
+
+  describe 'constructor', ->
+    it 'add callback on constructor', ->
+      spyOn(gapi.hangout.onApiReady, 'add')
+      new HangoutApplication()
+      expect(gapi.hangout.onApiReady.add).toHaveBeenCalled()
 
   describe 'initialize', ->
     beforeEach ->
+      @app = new HangoutApplication()
       spyOn @app, 'sendUrl'
       spyOn(gapi.hangout.onParticipantsChanged, 'add')
       @jQuerySpy = spyOn jQuery.fn, 'click'
@@ -44,37 +65,56 @@ describe 'Hangout Connection App', ->
     it 'sets refresh interval', ->
       spyOn(window, 'setInterval')
       @app.initialize()
-      expect(window.setInterval).toHaveBeenCalledWith(@app.sendUrl, 300000)
+      expect(window.setInterval).toHaveBeenCalledWith(@app.sendUrl, 120000)
+
+    it 'sets hoa_status to "started"', ->
+      gapi.hangout.data.setValue 'updated', undefined
+      @app.initialize()
+      expect(@app.hoa_status).toEqual('started')
+
+  describe 'changeHoaStatus', ->
+    beforeEach ->
+      spyOn jQuery, 'ajax'
+      @app = new HangoutApplication()
+
+    it "sendUrl first time with hoa status of 'started' and notify true", ->
+      expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
+        data: {
+          title: 'Topic',
+          project_id: 'project_id',
+          event_id: 'event_id',
+          category: 'category',
+          host_id: 'host_id',
+          participants: {},
+          hangout_url: 'https://hangouts.com/4',
+          yt_video_id: '456IDF65',
+          hoa_status: 'started',
+          notify: true
+        }
+      })
+
+    it "change from 'started' to 'broadcasting' if 'broadcasting'", ->
+      @app.changeHoaStatus(isBroadcasting: true)
+      expect(@app.hoa_status).toEqual('broadcasting')
+      expect(jQuery.ajax).toHaveBeenCalled()
+
+    it "change from 'broadcasting' to 'finish' if end 'broadcasting'", ->
+      @app.changeHoaStatus(isBroadcasting: true)
+      @app.changeHoaStatus(isBroadcasting: false)
+      expect(@app.hoa_status).toEqual('finished')
+      expect(jQuery.ajax).toHaveBeenCalled()
 
   describe 'sendUrl', ->
     beforeEach ->
+      @app = new HangoutApplication()
+      @app.hoa_status = 'any hoa_status'
       spyOn jQuery, 'ajax'
-
-      $.extend @hangout, {
-        getStartData: ->
-          JSON.stringify {
-            title: 'Topic',
-            projectId: 'project_id',
-            eventId: 'event_id',
-            category: 'category',
-            hostId: 'host_id',
-            hangoutId: 'hangout_id',
-            callbackUrl: 'https://test.com/'
-          },
-        getHangoutUrl: -> 'https://hangouts.com/4',
-        getParticipants: -> {},
-        onair: {
-                  getYouTubeLiveId: -> ('456IDF65'),
-                  isBroadcasting: -> true
-               },
-        layout: { displayNotice: -> }
-    }
 
     it 'makes request to WSO with correct params', ->
       @app.sendUrl true
 
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
-        url: 'https://test.com/hangout_id'})
+        url: '//test.com/hangout_id'})
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
         dataType: 'text'})
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
@@ -89,7 +129,7 @@ describe 'Hangout Connection App', ->
           participants: {},
           hangout_url: 'https://hangouts.com/4',
           yt_video_id: '456IDF65',
-          # isBroadcasting: true,
+          hoa_status: 'any hoa_status',
           notify: true
         }
       })
@@ -119,22 +159,3 @@ describe 'Hangout Connection App', ->
       @app.sendUrl()
       expect(gapi.hangout.data.getValue('status')).toEqual('error')
       expect($('.controls__status')).toHaveClass('controls__status--error')
-
-    it 'makes request to WSO with correct params if callbackUrl in v0 format', ->
-
-      @hangout.getStartData = -> 'https://hangouts.com/id'
-      @app.sendUrl()
-
-      expect(jQuery.ajax).toHaveBeenCalledWith(jasmine.objectContaining({
-        data: {
-          title: undefined,
-          project_id: undefined,
-          event_id: undefined,
-          category: undefined,
-          host_id: undefined,
-          participants: {},
-          hangout_url: 'https://hangouts.com/4',
-          yt_video_id: '456IDF65',
-          notify: undefined
-        }
-      }))
