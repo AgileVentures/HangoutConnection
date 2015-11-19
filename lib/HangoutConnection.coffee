@@ -39,8 +39,7 @@ class HangoutApplication
   sendUrl: (notify)=>
     startData = JSON.parse gapi.hangout.getStartData()
 
-    # callbackUrl = startData.callbackUrl + startData.hangoutId
-    callbackUrl =  'https://websiteone-production.herokuapp.com/hangouts/' + startData.hangoutId
+    callbackUrl = startData.callbackUrl + startData.hangoutId
     hangoutUrl = gapi.hangout.getHangoutUrl()
     youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId()
     participants = gapi.hangout.getParticipants()
