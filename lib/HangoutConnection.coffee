@@ -14,6 +14,7 @@ class HangoutApplication
 
       (new window.Timer).init()
 
+      @timestr = (new Date).toJSON().replace(/(.*T|:|\..*Z$)/g, '')
       @hoa_status = 'started'
       @sendUrl true
       @interval = setInterval @sendUrl, 120000
@@ -39,7 +40,7 @@ class HangoutApplication
   sendUrl: (notify)=>
     startData = JSON.parse gapi.hangout.getStartData()
 
-    callbackUrl = startData.callbackUrl + startData.hangoutId
+    callbackUrl = startData.callbackUrl + startData.hangoutId + @timestr
     hangoutUrl = gapi.hangout.getHangoutUrl()
     youTubeLiveId = gapi.hangout.onair.getYouTubeLiveId()
     participants = gapi.hangout.getParticipants()
