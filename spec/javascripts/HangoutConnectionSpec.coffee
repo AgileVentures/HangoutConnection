@@ -112,9 +112,10 @@ describe 'Hangout Connection App', ->
 
     it 'makes request to WSO with correct params', ->
       @app.sendUrl true
+      @app.timestr = (new Date).toJSON().replace(/(.*T|:|\..*Z$)/g, '')
 
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
-        url: '//test.com/hangout_id'})
+        url: "//test.com/hangout_id#{@app.timestr}"})
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
         dataType: 'text'})
       expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
