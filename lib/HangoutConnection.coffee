@@ -4,6 +4,7 @@ class HangoutApplication
       if eventObj.isApiReady
         @initialize()
         gapi.hangout.onair.onBroadcastingChanged.add @changeHoaStatus
+        gapi.hangout.onParticipantsChanged.add @changeParticipantStatus
 
   initialize: =>
     if gapi.hangout.data.getValue('updated') isnt 'true'
@@ -22,6 +23,9 @@ class HangoutApplication
       $('.controls__status')
         .removeClass('controls__status--ok controls__status--error')
         .addClass("controls__status--#{gapi.hangout.data.getValue 'status'}")
+
+  changeParticipantStatus: (e) =>
+    @sendUrl()
 
   changeHoaStatus: (e) =>
     prev_hoa_status = @hoa_status

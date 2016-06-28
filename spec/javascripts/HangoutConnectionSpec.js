@@ -187,7 +187,7 @@
         expect(gapi.hangout.data.getValue('status')).toEqual('ok');
         return expect($('.controls__status')).toHaveClass('controls__status--ok');
       });
-      it('displays notice and sets uptade flag after update', function() {
+      it('displays notice and sets update flag after update', function() {
         jQuery.ajax.and.callFake(function(e) {
           return e.success();
         });
@@ -196,7 +196,7 @@
         expect(gapi.hangout.data.getValue('updated')).toEqual('true');
         return expect(this.hangout.layout.displayNotice).toHaveBeenCalled();
       });
-      return it('updates connection satus to error on failure', function() {
+      return it('updates connection status to error on failure', function() {
         jQuery.ajax.and.callFake(function(e) {
           return e.error();
         });
