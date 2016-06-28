@@ -143,7 +143,7 @@ describe 'Hangout Connection App', ->
       expect(gapi.hangout.data.getValue('status')).toEqual('ok')
       expect($('.controls__status')).toHaveClass('controls__status--ok')
 
-    it 'displays notice and sets uptade flag after update', ->
+    it 'displays notice and sets update flag after update', ->
       jQuery.ajax.and.callFake (e)->
         e.success()
 
@@ -153,7 +153,7 @@ describe 'Hangout Connection App', ->
       expect(gapi.hangout.data.getValue('updated')).toEqual('true')
       expect(@hangout.layout.displayNotice).toHaveBeenCalled()
 
-    it 'updates connection satus to error on failure', ->
+    it 'updates connection status to error on failure', ->
       jQuery.ajax.and.callFake (e)->
         e.error()
 
