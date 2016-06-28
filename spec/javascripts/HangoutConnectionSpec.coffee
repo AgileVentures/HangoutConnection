@@ -9,7 +9,7 @@ describe 'Hangout Connection App', ->
               setValue: (key, value)-> state[key] = value
             },
       hideApp: ->,
-      onParticipantsChanged: { add: -> },
+      onParticipantsChanged: { add: (callback) -> callback({}) },
       onApiReady: { add: (callback) -> callback({isApiReady: true}) },
       getStartData: ->
         JSON.stringify {
@@ -37,16 +37,20 @@ describe 'Hangout Connection App', ->
     window.gapi.hangout.data.setValue 'updated', 'false'
 
   describe 'constructor', ->
-    it 'add callback on constructor', ->
+    it 'add onApiReady callback on constructor', ->
       spyOn(gapi.hangout.onApiReady, 'add')
       new HangoutApplication()
       expect(gapi.hangout.onApiReady.add).toHaveBeenCalled()
+
+    it 'add onParticipantsChanged callback on constructor', ->
+      spyOn(gapi.hangout.onParticipantsChanged, 'add')
+      new HangoutApplication()
+      expect(gapi.hangout.onParticipantsChanged.add).toHaveBeenCalled()
 
   describe 'initialize', ->
     beforeEach ->
       @app = new HangoutApplication()
       spyOn @app, 'sendUrl'
-      spyOn(gapi.hangout.onParticipantsChanged, 'add')
       @jQuerySpy = spyOn jQuery.fn, 'click'
 
     afterEach ->

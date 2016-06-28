@@ -20,7 +20,9 @@
         },
         hideApp: function() {},
         onParticipantsChanged: {
-          add: function() {}
+          add: function(callback) {
+            return callback({});
+          }
         },
         onApiReady: {
           add: function(callback) {
@@ -70,17 +72,21 @@
       return window.gapi.hangout.data.setValue('updated', 'false');
     });
     describe('constructor', function() {
-      return it('add callback on constructor', function() {
+      it('add onApiReady callback on constructor', function() {
         spyOn(gapi.hangout.onApiReady, 'add');
         new HangoutApplication();
         return expect(gapi.hangout.onApiReady.add).toHaveBeenCalled();
+      });
+      return it('add onParticipantsChanged callback on constructor', function() {
+        spyOn(gapi.hangout.onParticipantsChanged, 'add');
+        new HangoutApplication();
+        return expect(gapi.hangout.onParticipantsChanged.add).toHaveBeenCalled();
       });
     });
     describe('initialize', function() {
       beforeEach(function() {
         this.app = new HangoutApplication();
         spyOn(this.app, 'sendUrl');
-        spyOn(gapi.hangout.onParticipantsChanged, 'add');
         return this.jQuerySpy = spyOn(jQuery.fn, 'click');
       });
       afterEach(function() {
