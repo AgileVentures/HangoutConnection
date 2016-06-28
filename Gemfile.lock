@@ -9,7 +9,7 @@ GEM
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
-    eventmachine (1.0.3)
+    eventmachine (1.2.0.1)
     ffi (1.9.3)
     formatador (0.2.5)
     guard (2.6.1)
@@ -65,3 +65,6 @@ DEPENDENCIES
   guard-jasmine
   guard-livereload
   jasmine
+
+BUNDLED WITH
+   1.12.5
