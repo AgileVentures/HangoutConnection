@@ -76,6 +76,18 @@ describe 'Hangout Connection App', ->
       @app.initialize()
       expect(@app.hoa_status).toEqual('started')
 
+  describe 'changeParticipantStatus', ->
+    beforeEach -> 
+      spyOn jQuery, 'ajax'
+      spyOn window, 'setInterval'
+      @app = new HangoutApplication()
+
+    it 'pings server if hangout participants change', ->
+      @app.changeParticipantStatus()
+      expect(jQuery.ajax).toHaveBeenCalled()
+      # expect(window.setInterval).toHaveBeenCalled()
+      expect(jQuery.ajax.calls.count()).toBe(3);
+
   describe 'changeHoaStatus', ->
     beforeEach ->
       spyOn jQuery, 'ajax'

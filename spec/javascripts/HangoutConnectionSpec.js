@@ -113,6 +113,18 @@
         return expect(this.app.hoa_status).toEqual('started');
       });
     });
+    describe('changeParticipantStatus', function() {
+      beforeEach(function() {
+        spyOn(jQuery, 'ajax');
+        spyOn(window, 'setInterval');
+        return this.app = new HangoutApplication();
+      });
+      return it('pings server if hangout participants change', function() {
+        this.app.changeParticipantStatus();
+        expect(jQuery.ajax).toHaveBeenCalled();
+        return expect(jQuery.ajax.calls.count()).toBe(3);
+      });
+    });
     describe('changeHoaStatus', function() {
       beforeEach(function() {
         spyOn(jQuery, 'ajax');
