@@ -265,12 +265,14 @@
     function HangoutApplication() {
       this.sendUrl = bind(this.sendUrl, this);
       this.changeHoaStatus = bind(this.changeHoaStatus, this);
+      this.changeParticipantStatus = bind(this.changeParticipantStatus, this);
       this.initialize = bind(this.initialize, this);
       gapi.hangout.onApiReady.add((function(_this) {
         return function(eventObj) {
           if (eventObj.isApiReady) {
             _this.initialize();
-            return gapi.hangout.onair.onBroadcastingChanged.add(_this.changeHoaStatus);
+            gapi.hangout.onair.onBroadcastingChanged.add(_this.changeHoaStatus);
+            return gapi.hangout.onParticipantsChanged.add(_this.changeParticipantStatus);
           }
         };
       })(this));
@@ -297,6 +299,10 @@
       } else {
         return $('.controls__status').removeClass('controls__status--ok controls__status--error').addClass("controls__status--" + (gapi.hangout.data.getValue('status')));
       }
+    };
+
+    HangoutApplication.prototype.changeParticipantStatus = function(e) {
+      return this.sendUrl();
     };
 
     HangoutApplication.prototype.changeHoaStatus = function(e) {
