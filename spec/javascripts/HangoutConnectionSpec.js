@@ -21,7 +21,7 @@
         hideApp: function() {},
         onParticipantsChanged: {
           add: function(callback) {
-            return callback({});
+            return {};
           }
         },
         onApiReady: {
@@ -78,9 +78,10 @@
         return expect(gapi.hangout.onApiReady.add).toHaveBeenCalled();
       });
       return it('add onParticipantsChanged callback on constructor', function() {
+        var ha;
         spyOn(gapi.hangout.onParticipantsChanged, 'add');
-        new HangoutApplication();
-        return expect(gapi.hangout.onParticipantsChanged.add).toHaveBeenCalled();
+        ha = new HangoutApplication();
+        return expect(gapi.hangout.onParticipantsChanged.add).toHaveBeenCalledWith(ha.changeParticipantStatus);
       });
     });
     describe('initialize', function() {
@@ -115,14 +116,12 @@
     });
     describe('changeParticipantStatus', function() {
       beforeEach(function() {
-        spyOn(jQuery, 'ajax');
-        spyOn(window, 'setInterval');
         return this.app = new HangoutApplication();
       });
       return it('pings server if hangout participants change', function() {
+        spyOn(jQuery, 'ajax');
         this.app.changeParticipantStatus();
-        expect(jQuery.ajax).toHaveBeenCalled();
-        return expect(jQuery.ajax.calls.count()).toBe(3);
+        return expect(jQuery.ajax.calls.count()).toBe(1);
       });
     });
     describe('changeHoaStatus', function() {

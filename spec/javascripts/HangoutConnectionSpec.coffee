@@ -9,7 +9,7 @@ describe 'Hangout Connection App', ->
               setValue: (key, value)-> state[key] = value
             },
       hideApp: ->,
-      onParticipantsChanged: { add: (callback) -> callback({}) },
+      onParticipantsChanged: { add: (callback) -> {} },
       onApiReady: { add: (callback) -> callback({isApiReady: true}) },
       getStartData: ->
         JSON.stringify {
@@ -44,8 +44,8 @@ describe 'Hangout Connection App', ->
 
     it 'add onParticipantsChanged callback on constructor', ->
       spyOn(gapi.hangout.onParticipantsChanged, 'add')
-      new HangoutApplication()
-      expect(gapi.hangout.onParticipantsChanged.add).toHaveBeenCalled()
+      ha = new HangoutApplication()
+      expect(gapi.hangout.onParticipantsChanged.add).toHaveBeenCalledWith(ha.changeParticipantStatus)
 
   describe 'initialize', ->
     beforeEach ->
@@ -78,15 +78,12 @@ describe 'Hangout Connection App', ->
 
   describe 'changeParticipantStatus', ->
     beforeEach -> 
-      spyOn jQuery, 'ajax'
-      spyOn window, 'setInterval'
       @app = new HangoutApplication()
 
     it 'pings server if hangout participants change', ->
+      spyOn jQuery, 'ajax'
       @app.changeParticipantStatus()
-      expect(jQuery.ajax).toHaveBeenCalled()
-      # expect(window.setInterval).toHaveBeenCalled()
-      expect(jQuery.ajax.calls.count()).toBe(3);
+      expect(jQuery.ajax.calls.count()).toBe(1);
 
   describe 'changeHoaStatus', ->
     beforeEach ->

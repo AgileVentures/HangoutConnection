@@ -18,7 +18,7 @@ class HangoutApplication
       @timestr = (new Date).toJSON().replace(/(.*T|:|\..*Z$)/g, '')
       @hoa_status = 'started'
       @sendUrl true
-      # @interval = setInterval @sendUrl, 120000
+      @interval = setInterval @sendUrl, 120000
     else
       $('.controls__status')
         .removeClass('controls__status--ok controls__status--error')
