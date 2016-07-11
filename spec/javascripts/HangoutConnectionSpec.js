@@ -145,6 +145,16 @@
           }
         }));
       });
+      it('displays youtube url when finished', function() {
+        spyOn(this.hangout.layout, 'displayNotice');
+        this.app.changeHoaStatus({
+          isBroadcasting: true
+        });
+        this.app.changeHoaStatus({
+          isBroadcasting: false
+        });
+        return expect(this.hangout.layout.displayNotice).toHaveBeenCalledWith("Youtube url for this session is at: https://www.youtube.com/watch?v=456IDF65");
+      });
       it("change from 'started' to 'broadcasting' if 'broadcasting'", function() {
         this.app.changeHoaStatus({
           isBroadcasting: true
