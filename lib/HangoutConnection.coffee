@@ -41,7 +41,7 @@ class HangoutApplication
       @sendUrl()
       if @hoa_status == 'finished'  
         clearInterval(@interval) 
-        gapi.hangout.layout.displayNotice "Youtube url for this session is at: https://www.youtube.com/watch?v=" + gapi.hangout.onair.getYouTubeLiveId() + " And please share with us how your pairing went via email: info@agileventures.org"
+        gapi.hangout.layout.displayNotice "Youtube url for this session is at: https://www.youtube.com/watch?v=" + gapi.hangout.onair.getYouTubeLiveId() + " And please share with us how your pairing went via email: info@agileventures.org", true
 
   sendUrl: (notify)=>
     startData = JSON.parse gapi.hangout.getStartData()
