@@ -153,7 +153,7 @@
         this.app.changeHoaStatus({
           isBroadcasting: false
         });
-        return expect(this.hangout.layout.displayNotice).toHaveBeenCalledWith("Youtube url for this session is at: https://www.youtube.com/watch?v=456IDF65");
+        return expect(this.hangout.layout.displayNotice).toHaveBeenCalledWith("Youtube url for this session is at: https://www.youtube.com/watch?v=456IDF65", true);
       });
       it("change from 'started' to 'broadcasting' if 'broadcasting'", function() {
         this.app.changeHoaStatus({

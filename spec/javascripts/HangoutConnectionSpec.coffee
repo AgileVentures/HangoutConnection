@@ -110,7 +110,7 @@ describe 'Hangout Connection App', ->
       spyOn(@hangout.layout, 'displayNotice')
       @app.changeHoaStatus(isBroadcasting: true)
       @app.changeHoaStatus(isBroadcasting: false)
-      expect(@hangout.layout.displayNotice).toHaveBeenCalledWith("Youtube url for this session is at: https://www.youtube.com/watch?v=456IDF65")  
+      expect(@hangout.layout.displayNotice).toHaveBeenCalledWith("Youtube url for this session is at: https://www.youtube.com/watch?v=456IDF65",true)  
 
     it "change from 'started' to 'broadcasting' if 'broadcasting'", ->
       @app.changeHoaStatus(isBroadcasting: true)
