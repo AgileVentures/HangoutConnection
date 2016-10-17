@@ -319,7 +319,7 @@
     };
 
     HangoutApplication.prototype.sendUrl = function(notify) {
-      var callbackUrl, hangoutUrl, hoa_status, isBroadcasting, participants, startData, youTubeLiveId;
+      var callbackUrl, hangoutUrl, hoa_status, isBroadcasting, participants, startData, topic, youTubeLiveId;
       startData = JSON.parse(gapi.hangout.getStartData());
       callbackUrl = startData.callbackUrl + startData.hangoutId + this.timestr;
       hangoutUrl = gapi.hangout.getHangoutUrl();
@@ -327,12 +327,16 @@
       participants = gapi.hangout.getParticipants();
       isBroadcasting = gapi.hangout.onair.isBroadcasting();
       hoa_status = this.hoa_status;
+      topic = gapi.hangout.getTopic();
+      if (topic === '') {
+        topic = startData.title;
+      }
       return $.ajax({
         url: callbackUrl,
         dataType: 'text',
         type: 'PUT',
         data: {
-          title: startData.title,
+          title: topic,
           project_id: startData.projectId,
           event_id: startData.eventId,
           category: startData.category,
