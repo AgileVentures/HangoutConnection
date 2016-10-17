@@ -39,8 +39,8 @@ class HangoutApplication
 
     if prev_hoa_status isnt @hoa_status
       @sendUrl()
-      if @hoa_status == 'finished'  
-        clearInterval(@interval) 
+      if @hoa_status == 'finished'
+        clearInterval(@interval)
         gapi.hangout.layout.displayNotice "Youtube url for this session is at: https://www.youtube.com/watch?v=" + gapi.hangout.onair.getYouTubeLiveId() + " And please share with us how your pairing went via email: info@agileventures.org", true
 
   sendUrl: (notify)=>
@@ -52,13 +52,16 @@ class HangoutApplication
     participants = gapi.hangout.getParticipants()
     isBroadcasting = gapi.hangout.onair.isBroadcasting()
     hoa_status = @hoa_status
+    topic = gapi.hangout.getTopic()
+    if topic == ''
+      topic = startData.title
 
     $.ajax {
       url: callbackUrl,
       dataType: 'text',
       type: 'PUT',
       data:
-        title: startData.title,
+        title: topic,
         project_id: startData.projectId,
         event_id: startData.eventId,
         category: startData.category,

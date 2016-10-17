@@ -23,6 +23,7 @@ describe 'Hangout Connection App', ->
         },
       getHangoutUrl: -> 'https://hangouts.com/4',
       getParticipants: -> {},
+      getTopic: -> '',
       onair: {
         onBroadcastingChanged: { add: -> },
         getYouTubeLiveId: -> ('456IDF65'),
@@ -31,6 +32,7 @@ describe 'Hangout Connection App', ->
       layout: { displayNotice: -> }
     }
     window.gapi = { hangout: @hangout }
+
 
     setFixtures sandbox({ 'class': 'controls__status' })
 
@@ -77,7 +79,7 @@ describe 'Hangout Connection App', ->
       expect(@app.hoa_status).toEqual('started')
 
   describe 'changeParticipantStatus', ->
-    beforeEach -> 
+    beforeEach ->
       @app = new HangoutApplication()
 
     it 'pings server if hangout participants change', ->
@@ -110,7 +112,7 @@ describe 'Hangout Connection App', ->
       spyOn(@hangout.layout, 'displayNotice')
       @app.changeHoaStatus(isBroadcasting: true)
       @app.changeHoaStatus(isBroadcasting: false)
-      expect(@hangout.layout.displayNotice).toHaveBeenCalledWith("Youtube url for this session is at: https://www.youtube.com/watch?v=456IDF65 And please share with us how your pairing went via email: info@agileventures.org", true)  
+      expect(@hangout.layout.displayNotice).toHaveBeenCalledWith("Youtube url for this session is at: https://www.youtube.com/watch?v=456IDF65 And please share with us how your pairing went via email: info@agileventures.org", true)
 
     it "change from 'started' to 'broadcasting' if 'broadcasting'", ->
       @app.changeHoaStatus(isBroadcasting: true)
@@ -179,3 +181,26 @@ describe 'Hangout Connection App', ->
       @app.sendUrl()
       expect(gapi.hangout.data.getValue('status')).toEqual('error')
       expect($('.controls__status')).toHaveClass('controls__status--error')
+
+    it 'Hangout changed title', ->
+      spyOn(gapi.hangout, 'getTopic').and.returnValue('New hangout');
+      @app.sendUrl true
+      
+      expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
+        dataType: 'text'})
+      expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
+        type: 'PUT'})
+      expect(jQuery.ajax).toHaveBeenCalledWith jasmine.objectContaining({
+        data: {
+          title: 'New hangout',
+          project_id: 'project_id',
+          event_id: 'event_id',
+          category: 'category',
+          host_id: 'host_id',
+          participants: {},
+          hangout_url: 'https://hangouts.com/4',
+          yt_video_id: '456IDF65',
+          hoa_status: 'any hoa_status',
+          notify: true
+        }
+      })
